@@ -16,34 +16,31 @@ cliente* criar()
     return head;
 }
 
-void inserir(cliente *head, string nome, string cpf, int pos)
+void inserir(cliente *head, string nome, string cpf, int p)
 {
     cliente *aux = head, *c = new cliente(nome, cpf);
-    int i = 1;
-    while(i < pos and aux->next)
-        aux = aux->next, i++;
+
+    for(int i = 1; i < p and aux->next; i++){aux = aux->next;}
+    
     if(!aux->next)
         aux->next = c;
     else
         c->next = aux->next, aux->next = c;
-
 }
 
-cliente remover(cliente *head, int pos)
+
+cliente remover(cliente *head, int p)
 {
     cliente *aux = head, r;
-    int i = 1;
-    while(i < pos - 1){
-        aux = aux->next, i++;
-        cout << "wrgwg\n";
+    for(int i = 1; i < p and aux->next; i++){aux = aux->next;}
+    r = *(aux->next);
+    if(!aux->next->next)
+        aux->next = nullptr, delete(aux->next);
+    else
+    {
+        cliente *k;
+        k = aux->next->next, delete(aux->next), aux->next = k;  
     }
-    r = *(aux->next)
-    if(aux->next->next != nullptr){
-    	aux->next = aux->next->next;
-    	cout << "as\n";
-   	}
-
-    free(aux->next->next), aux->next->next = nullptr;
     return r;
 }
 
@@ -78,11 +75,14 @@ int main()
 {
 	cliente *head = criar();
 	inserir(head, "a", "123", 1);
-	inserir(head, "b", "456", 2);
-	//inserir(head, "c", "789", 3);
-	cout << (remover(head, 1).nome) << '\n';
-	cout << (buscar(head, "123")) << '\n';
-	//mprimir(head);
+	inserir(head, "b", "456", 1);
+	inserir(head, "c", "789", 2);
+	cout << buscar(head, "123") << '\n';
+	cout << buscar(head, "456") << '\n';
+	cout << buscar(head, "789") << '\n';
+	remover(head, 3);
+	imprimir(head);
+    deletar(head);
 
     return 0;
 }
