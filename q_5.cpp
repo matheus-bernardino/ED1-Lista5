@@ -5,9 +5,9 @@ using namespace std;
 struct cliente
 {
     string nome, cpf;
-    cliente *next;
-    cliente(string _nome, string _cpf){nome = _nome, cpf = _cpf, next = nullptr;}
-    cliente(){next = nullptr;}
+    cliente *next, *prev;
+    cliente(string _nome, string _cpf){nome = _nome, cpf = _cpf, next = nullptr, prev = nullptr;}
+    cliente(){next = nullptr, prev = nullptr;}
 };
 
 cliente* criar()
@@ -16,31 +16,27 @@ cliente* criar()
     return head;
 }
 
-void inserir(cliente *head, string nome, string cpf, int p)
+void inserir(cliente *head, string nome, string cpf, int pos)
 {
     cliente *aux = head, *c = new cliente(nome, cpf);
+    for(int i = 1; i < pos and aux->next; i++){aux = aux->next;}
 
-    for(int i = 1; i < p and aux->next; i++){aux = aux->next;}
-    
     if(!aux->next)
-        aux->next = c;
+        aux->next = c, c->prev = aux, c->next = nullptr;
     else
-        c->next = aux->next, aux->next = c;
+        c->next = aux->next, c->next->prev = c, aux->next = c, c->prev = aux;
 }
 
-
-cliente remover(cliente *head, int p)
+cliente remover(cliente *head, int pos)
 {
-    cliente *aux = head, r;
-    for(int i = 1; i < p and aux->next; i++){aux = aux->next;}
-    r = *(aux->next);
-    if(!aux->next->next)
-        aux->next = nullptr, delete(aux->next);
+    cliente *aux = head->next, r;
+    for(int i = 1; i < pos and aux->next; i++){aux = aux->next;}
+
+    r = *aux;
+    if(!aux->next)
+        aux->prev->next = nullptr;
     else
-    {
-        cliente *k;
-        k = aux->next->next, delete(aux->next), aux->next = k;  
-    }
+        aux->prev->next = aux->next, aux->next->prev = aux->prev;
     return r;
 }
 
@@ -59,14 +55,14 @@ void imprimir(cliente *head)
 {
     cliente *aux = head->next;
     while(aux)
-        cout << aux->nome << ' ' << aux->cpf << '\n', aux = aux->next;    
+        cout << aux->nome << ' ' << aux->cpf << '\n', aux = aux->next;
 }
 
 void deletar(cliente *head)
 {
-    cliente *aux = head;
+	cliente *aux = head;
     while(aux->next)
-        aux = aux->next, free(head), head = aux->next;
+        aux = aux->next, delete(head), head = aux->next;
 }
 
 int main()
@@ -82,6 +78,6 @@ int main()
 	cout << (remover(head, 3).cpf) << '\n' << '\n';
 	imprimir(head);
     deletar(head);
-
+	
     return 0;
 }

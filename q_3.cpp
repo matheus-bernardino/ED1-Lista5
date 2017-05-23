@@ -34,12 +34,24 @@ cliente remover(cliente *head)
 void deletar(cliente *head)
 {
 	cliente *aux = head;
-    while(aux->next != nullptr)
+    while(aux->next)
         aux = aux->next, delete(head), head = aux->next;
 }
 
 int main()
 {
+	cliente *head = criar();
+	inserir(head, "a", "123");
+	inserir(head, "b", "456");
+	inserir(head, "c", "789");
+	cout << head->next->cpf << '\n';
+	cout << head->next->next->cpf << '\n';
+	cout << head->next->next->next->cpf << '\n' << '\n';
+	
+	cout << (remover(head).cpf) << '\n';
+	cout << (remover(head).cpf) << '\n';
+	cout << (remover(head).cpf) << '\n';
+    deletar(head);
 
     return 0;
 }
